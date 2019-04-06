@@ -3,7 +3,7 @@ from PyQt5.QtCore import pyqtSignal
 import time
 
 
-class PriceCrawler(QtCore.QThread):
+class TickerFetcher(QtCore.QThread):
     sig = pyqtSignal(object)
 
     def __init__(self, client, parent=None):

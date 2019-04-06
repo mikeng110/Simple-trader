@@ -6,15 +6,15 @@ import time
 class TransactionBot(QtCore.QThread):
     sig = pyqtSignal(object)
 
-    def __init__(self, client, price_crawler, transaction, parent=None):
+    def __init__(self, client, ticker_fetcher, transaction, parent=None):
         QtCore.QThread.__init__(self, parent)
         self.running = True
         self.delta = 0.5
         self.client = client
-        self.price_crawler = price_crawler
+        self.ticker_fetcher = ticker_fetcher
         self.symbol = "BTCUSDT"
         self.transaction = transaction
-        self.price_crawler.sig.connect(self.update_ticker)
+        self.ticker_fetcher.sig.connect(self.update_ticker)
         self.ticker = {}
 
     def run(self):

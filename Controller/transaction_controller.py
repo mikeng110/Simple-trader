@@ -1,31 +1,30 @@
 from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSignal
-from transaction_bot2 import TransactionBot
+from Bots.transaction_bot import TransactionBot
 
-class TransactionHandler(QtCore.QObject):
+
+class TransactionController(QtCore.QObject):
     sig = pyqtSignal(object) #used to send
-    def __init__(self, client, crawler, parent=None):
+
+    def __init__(self, client, ticker_fetcher, parent=None):
         QtCore.QObject.__init__(self, parent)
         self.pending_data = {}
         self.active_data = {}
         self.closed_data = {}
         self.client = client
-        self.crawler = crawler
+        self.ticker_fetcher = ticker_fetcher
         self.bots = []
-
 
     def create_transaction(self, transaction): #create proper class for data
         id = transaction["id"]
 
-        bot = TransactionBot(self.client, self.crawler, transaction)
+        bot = TransactionBot(self.client, self.ticker_fetcher, transaction)
         self.bots.append({"id": id, "bot": bot})
         bot.start()
         bot.sig.connect(self.update_transaction)
 
         self.pending_data[id] = transaction
         self.update_transaction(transaction)
-
-
 
     def update_transaction(self, transaction):
         id = transaction["id"]
